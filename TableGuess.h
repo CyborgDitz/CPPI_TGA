@@ -2,7 +2,8 @@
 #include "Casino.h"
 #include "Data.h"
 #include "Player.h"
-namespace TableGuess
+
+class TableGuess
 {
     void PlayTable(Casino::GameState& aGameState, Player::Data& aPlayer);
     struct Data
@@ -15,4 +16,4 @@ namespace TableGuess
         const int inputTableMin = 2;
         const int inputTableMax = 12;
     };
-}
+};
