@@ -1,10 +1,8 @@
 #include "Casino.h"
-
 #include <iostream>
 #include <random>
-namespace Casino
-{
-    int InputInt()
+
+    int Casino::InputInt()
     {
         int playerInput = {};
         int returnValue{};
@@ -31,7 +29,7 @@ namespace Casino
 
         return returnValue;
     }
-    int RollDie()
+    int Casino::RollDie()
     {
         std::random_device seed;
         std::mt19937 rndEngine(seed());
@@ -39,7 +37,7 @@ namespace Casino
         int randomNumber = rndDist(rndEngine);
         return randomNumber;
     };
-    int RollRoulette()
+    int Casino::RollRoulette()
     {
         std::random_device seed;
         std::mt19937 rndEngine(seed());
@@ -47,30 +45,29 @@ namespace Casino
         int randomNumber = rndDist(rndEngine);
         return randomNumber;
     };
-    void SayWin()
+    void Casino::SayWin()
     {
         std::cout << "You win!" << std::endl;
     }
-    void SayLose()
+    void Casino::SayLose()
     {
         std::cout << "Thats your loss, you unlucky fool! \n" << std::endl;
     }
-    void SayInputError()
+    void Casino::SayInputError()
     {
         std::cout << "wrong input!" << std::endl;
     }
-    Data::OddCoin CalcOddEven()
+    Casino::OddCoin CalcOddEven(int aDie)
     {
-        const int die = RollDie();
+        const int die = aDie;
         if (die % 2 == 1)
         {
             std::cout << "It is Odd!" << std::endl;
-            return Data::OddCoin::Odd;
+            return Casino::OddCoin::Odd;
         }
         else
         {
             std::cout << "It is Even!" << std::endl;
-            return Data::OddCoin::Even;
+            return Casino::OddCoin::Even;
         }
     }
-}

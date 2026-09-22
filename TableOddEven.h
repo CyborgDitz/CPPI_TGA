@@ -1,8 +1,9 @@
 #pragma once
 #include "Player.h"
-#include "Data.h"
-namespace TableOddEven
+
+class TableOddEven
 {
+    public:
     struct Data
     {
         
@@ -13,4 +14,6 @@ namespace TableOddEven
         int myTableBonus = 55;
     };
     void PlayTable(Casino::GameState& aGameState, Player::Data& aPlayer);
-}
+private:
+};
+

@@ -1,25 +1,32 @@
 #pragma once
+#include "TableGuess.h"
+#include "TableRoulette.h"
+#include "TableHighRoll.h"
+#include "TableOddEven.h"
 
-namespace Casino
+class Casino
 {
+    public:
+    Casino();
+    ~Casino();
+    
+    enum class OddCoin
+    {
+        No_Coin,
+        Odd,
+        Even
+    };
     void SayInputError();
     int InputInt();
     int RollDie();
     int RollRoulette();
     void SayWin();
     void SayLose();
-    struct Data
-    {
-        enum class OddCoin
-        {
-            No_Coin,
-            Odd,
-            Even
-        };
-        bool isMainActive = false;
-        bool IsTableActive = false;
-    };
-   Data::OddCoin CalcOddEven();
+    bool isMainActive = false;
+    bool IsTableActive = false;
+    
+    OddCoin getData() const;
+    OddCoin CalcOddEven(int aDie);
     enum class TableMenu
     {
         Exit_Table,
@@ -36,4 +43,11 @@ namespace Casino
         Table_Roulette,
         Winstreak
     };
+    
+
+    private:
+    TableRoulette tableRoulette;
+    TableGuess tableGuess;
+    TableHighRoll tableHighRoll;
+    TableOddEven tableOddEven;
 };

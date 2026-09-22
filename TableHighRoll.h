@@ -2,10 +2,10 @@
 #include "Casino.h"
 #include "Player.h"
 #include "Data.h"
-namespace TableHighRoll
+
+class TableHighRoll
 {
-    void PlayTable(Player::Data& aPlayer);
-    void SayAskReadyToRoll();
+public:
     
     struct Data
     {
@@ -15,4 +15,7 @@ namespace TableHighRoll
         int myTableMultiplier = 1;
         int myTableBonus = 69;
     };
-}
+private:
+    void PlayTable(Player::Data& aPlayer);
+    void SayAskReadyToRoll();
+};

@@ -1,13 +1,15 @@
 #include "TableRoulette.h"
+#include "TableRoulette.h"
+#include "TableRoulette.h"
 #include <iostream>
 #include <ostream>
 #include "Data.h"
 #include "Casino.h"
 #include "Player.h"
 
-namespace TableRoulette
+
 {
-    void PlayStraight(Player::Data& aPlayer, Data aRoulette)
+    void PlayStraight(Player::Data& aPlayer, Data& aRoulette)
     {
 
         bool isInputActive = true;
@@ -47,15 +49,28 @@ namespace TableRoulette
             Casino::SayWin();
         }
     }
-    void PlayColumn(Player::Data& aPlayer, const int aColumnValue)
+    void PlayColumn(Player::Data& aPlayer, Data::Column& aColumn)
     {
         const int divideToThirds = 2;
         int randomColumn = Casino::RollDie() / divideToThirds;
-        
-        if (aColumnValue!= randomColumn)
+        if (aColumn == Data::Column::Left)
         {
-            aPlayer.isWin = false;
+            std::cout << "It was LEFT " << std::endl;
+        }
+        else if (aColumn == Data::Column::Middle)
+        {
+            std::cout << "It was the MIDDLE" << std::endl;
+        }
+        else
+        {
+            std::cout << "It was RIGHT" << std::endl;
+        }
+        const int aColumnValue = static_cast<int>(aColumn);
+
+        if (aColumnValue != randomColumn)
+        {
             Casino::SayLose();
+            aPlayer.isWin = false;
         }
         else
         {
@@ -63,11 +78,10 @@ namespace TableRoulette
             Casino::SayWin();
         }
     }
-    void RouletteBet(Player::Data& aPlayer, const Data& aRoulette)
+    void RouletteBet(Player::Data& aPlayer, Data& aRoulette, Data::Bets& aBet)
     {
         bool isBetting = true;
-        std::cout << "gimme these" << aPlayer.myMoney << std::endl;
-        std::cout << "Pick what you want to bet on!\n 1. Straight\t2. Red/Black 3.\n Odd/Even\t4. Column bet!!" << std::endl;
+        std::cout << "Pick what you want to bet on!\n 1. Straight\t2. Red/Black\n 3. Odd/Even\t4. Column bet!!" << std::endl;
         while (isBetting)
         {
             switch (static_cast<Data::Bets>(Casino::InputInt()))
@@ -79,26 +93,30 @@ namespace TableRoulette
                 }
                 case Data::Bets::Straight_Gay:
                 {
+                    aBet = Data::Bets::Straight_Gay;
                     std::cout << "What are you betting on of 0-36?" << std::endl;
                     PlayStraight(aPlayer, aRoulette);
                     isBetting = false;
+
                     break;
                 }
 
                 case Data::Bets::Red_Black:
                 {
+                    aBet = Data::Bets::Red_Black;
                     std::cout << "Are you betting 1. Red or  2. Black" << std::endl;
                     Data::Color color = static_cast<Data::Color>(Casino::InputInt());
                     switch (color)
                     {
-                        case Data::Color::Black:
-                        {
-                            std::cout << "black!" << std::endl;
-                            break;
-                        }
                         case Data::Color::Red:
                         {
-                            std::cout << "red!" << std::endl;
+                            std::cout << "You picked red!" << std::endl;
+                            break;
+                        }
+                        case Data::Color::Black:
+                        {
+
+                            std::cout << "You picked red!" << std::endl;
                             break;
                         }
                         case Data::Color::Green:
@@ -108,15 +126,16 @@ namespace TableRoulette
                             break;
                         }
                     }
-                    PlayColor(aPlayer);
+                    PlayRouColorOrOdd(aPlayer, color);
                     isBetting = false;
                     break;
                 }
                 case Data::Bets::Odd_Even:
                 {
+                    aBet = Data::Bets::Odd_Even;
                     std::cout << "Are you betting 1. Odd or  2. Even?" << std::endl;
-                    Data::Color color = static_cast<Data::Color>(Casino::InputInt());
-                    switch (color)
+                    Data::Color colorAndNumber = static_cast<Data::Color>(Casino::InputInt());
+                    switch (colorAndNumber)
                     {
                         case Data::Color::Black:
                         {
@@ -136,53 +155,17 @@ namespace TableRoulette
                         }
 
                     }
-                    PlayColor(aPlayer);
+                    PlayRouColorOrOdd(aPlayer, colorAndNumber);
                     isBetting = false;
                     break;
                 }
                 case Data::Bets::Column:
                 {
-
+                    aBet = Data::Bets::Column;
                     std::cout << "What colum are you betting on?\n 1. left\t2. middle\t3. right" << std::endl;
                     Data::Column column = static_cast<Data::Column>(Casino::InputInt());
-                    int columnValue = {};
-                    bool isColumnActive = true;
-                    while (isColumnActive)
-                    {
 
-
-                        switch (column)
-                        {
-                            case Data::Column::Columnn_One:
-                            {
-                                columnValue = 1;
-                                std::cout << "Columnn One" << std::endl;
-                                break;
-                            }
-
-                            case Data::Column::Column_Two:
-                            {
-                                columnValue = 2;
-                                std::cout << "Column Two" << std::endl;
-                                break;
-                            }
-                            case Data::Column::Column_Three:
-                            {
-
-                                columnValue = 3;
-                                std::cout << "Column Three" << std::endl;
-                                break;
-                            }
-                            default:
-                            {
-                                columnValue = 3;
-                                std::cout << "You cant do that!" << std::endl;
-                                break;
-                            }
-                        }
-
-                    }
-                    PlayColumn(aPlayer, columnValue);
+                    PlayColumn(aPlayer, column);
                     isBetting = false;
 
                     break;
@@ -190,12 +173,10 @@ namespace TableRoulette
             }
         }
     }
-    void PlayColor(Player::Data& aPlayer)
+    void PlayRouColorOrOdd(Player::Data& aPlayer, Data::Color& aColor)
     {
         {
-            Data::Color  spinLogic = {};
-            
-            if (spinLogic != CalcRoulleteOddEven())
+            if (aColor != CalcRouletteColorAndOdd())
             {
                 aPlayer.isWin = false;
                 Casino::SayLose();
@@ -208,29 +189,29 @@ namespace TableRoulette
         }
     }
 
-  Data::Color CalcRoulleteOddEven()
+    Data::Color CalcRouletteColorAndOdd()
     {
-        int returnValue = {};
+        Data::Color returnValue = {};
         const int die = Casino::RollRoulette();
         if (die % 2 == 1)
         {
-            std::cout << "It is Odd!" << std::endl;
-           returnValue = 1;
+            std::cout << "It is Red indeed!" << std::endl;
+            returnValue = Data::Color::Red;
         }
-        else if ( die % 2 == 0)
+        else if (die % 2 == 0)
         {
-            std::cout << "It is Even!" << std::endl;
-            returnValue = 2;
+            std::cout << "It is Black indeed!" << std::endl;
+            returnValue = Data::Color::Black;
         }
         else
         {
             std::cout << "It is a zero! oof!" << std::endl;
-            returnValue = 0;
+            returnValue = Data::Color::Green;
         }
-        return;
+        return returnValue;
     }
-    void PlayTable(Player::Data& aPlayer, Data& aRoulette)
+    void PlayTable(Player::Data& aPlayer, Data& aRoulette, Data::Bets& aBet)
     {
-        RouletteBet(aPlayer, aRoulette);
+        RouletteBet(aPlayer, aRoulette, aBet);
     }
 }
