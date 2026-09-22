@@ -6,9 +6,9 @@
 #include "Casino.h"
 #include "Hasardspel.h"
 
-
-
-    void TableOddEven::SayAskReadyToRoll()
+namespace TableOddEven
+{
+    void SayAskReadyToRoll()
     {
         std::cout << "Ready to roll? Press any key to GO!" << std::endl;
     }
