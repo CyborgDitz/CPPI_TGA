@@ -6,8 +6,7 @@
 class TableHighRoll
 {
 public:
-    TableHighRoll();
-    ~TableHighRoll();
+    
     struct Data
     {
         int myMoney = {100};
@@ -18,4 +17,5 @@ public:
     };
 private:
     void PlayTable(Player::Data& aPlayer);
+    void SayAskReadyToRoll();
 };

@@ -1,10 +1,9 @@
 #pragma once
+#include "Player.h"
 
 class TableOddEven
 {
     public:
-    TableOddEven();
-    ~TableOddEven();
     struct Data
     {
         
@@ -14,8 +13,7 @@ class TableOddEven
         int myTableMultiplier =3;
         int myTableBonus = 55;
     };
-    
-  // void PlayTable(GameState& aGameState, Player::Data& aPlayer);
+    void PlayTable(Casino::GameState& aGameState, Player::Data& aPlayer);
 private:
 };
 

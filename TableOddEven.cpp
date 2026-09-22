@@ -1,46 +1,50 @@
+#include "TableGuess.h"
 #include <iostream>
+
 #include "TableOddEven.h"
 
 #include "Casino.h"
 #include "Hasardspel.h"
 
 
-void Casino::PlayOddEven(GameState& aGameState, Player& aPlayer)
-{
+
+    void TableOddEven::SayAskReadyToRoll()
     {
-        bool isInputActive = true;
-        OddCoin playerGuess = {};
-        while (isInputActive)
+        std::cout << "Ready to roll? Press any key to GO!" << std::endl;
+    }
+  
+    void PlayTable(Casino::GameState& aGameState, Player::Data& aPlayer)
+    {
         {
-            SayRulesTable(aGameState);
-            playerGuess = static_cast<OddCoin>(InputInt());
-            if (playerGuess == OddCoin::Odd || playerGuess == OddCoin::Even)
+            bool isInputActive = true;
+           Casino::Data::OddCoin playerGuess = {};
+            while (isInputActive)
             {
-                isInputActive = false;
+                SayRulesTable(aGameState);
+                playerGuess = static_cast<Casino::Data::OddCoin>(Casino::InputInt() );
+                if (playerGuess == Casino::Data::OddCoin::Odd || playerGuess == Casino::Data::OddCoin::Even)
+                {
+                    isInputActive = false;
+                }
+                else
+                {
+                    Casino::SayInputError();
+                }
+            }
+
+            const int die = Casino::RollDie();
+            std::cout << "I rolled: " << die << std::endl;
+
+            if (playerGuess != Casino::CalcOddEven() )
+            {
+                aPlayer.isWin = false;
+                Casino::SayLose();
             }
             else
             {
-                SayInputError();
+                aPlayer.isWin = true;
+                Casino::SayWin();
             }
         }
-
-        const int die = RollDie();
-        std::cout << "I rolled: " << die << std::endl;
-
-        if (playerGuess != CalcOddEven(RollDie()))
-        {
-            aPlayer.isWin = false;
-            SayLose();
-        }
-        else
-        {
-            aPlayer.isWin = true;
-            SayWin();
-        }
-    }
+    }   
 }
-
-void Casino::SayAskReadyToRoll()
-{
-    std::cout << "Ready to roll? Press any key to GO!" << std::endl;
-};

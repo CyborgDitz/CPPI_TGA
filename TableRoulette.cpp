@@ -7,7 +7,9 @@
 #include "Casino.h"
 #include "Player.h"
 
-    void PlayStraight(Player& aPlayer, Data& aRoulette)
+
+{
+    void PlayStraight(Player::Data& aPlayer, Data& aRoulette)
     {
 
         bool isInputActive = true;
@@ -47,7 +49,7 @@
             Casino::SayWin();
         }
     }
-    void PlayColumn(Player& aPlayer, Data::Column& aColumn)
+    void PlayColumn(Player::Data& aPlayer, Data::Column& aColumn)
     {
         const int divideToThirds = 2;
         int randomColumn = Casino::RollDie() / divideToThirds;
@@ -171,7 +173,7 @@
             }
         }
     }
-    void PlayRouColorOrOdd(Player& aPlayer, Data::Color& aColor)
+    void PlayRouColorOrOdd(Player::Data& aPlayer, Data::Color& aColor)
     {
         {
             if (aColor != CalcRouletteColorAndOdd())
@@ -212,4 +214,4 @@
     {
         RouletteBet(aPlayer, aRoulette, aBet);
     }
-
+}

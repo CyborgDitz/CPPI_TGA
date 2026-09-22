@@ -6,9 +6,10 @@
 #include "Hasardspel.h"
 
 
- void  PlayTableGuess(Casino::GameState& aGameState, Player::Data& aPlayer)
+{
+    void PlayTable(Casino::GameState& aGameState, Player::Data& aPlayer)
     {
-        
+        Data tableData;
         int playerGuess = 0;
         bool isInputActive = true;
         const int die1 = Casino::RollDie();
@@ -46,3 +47,4 @@
             Casino::SayWin();
         }
     }
+}
