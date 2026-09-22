@@ -5,7 +5,7 @@
 #include "Casino.h"
 #include "Hasardspel.h"
 
-
+namespace TableGuess
 {
     void PlayTable(Casino::GameState& aGameState, Player::Data& aPlayer)
     {

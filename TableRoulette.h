@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 
-
+#include "Casino.h"
 #include "Player.h"
 
-class TableRoulette
+namespace TableRoulette
 {
     struct Data
     {
@@ -21,8 +21,8 @@ class TableRoulette
         enum class Color
         {
             Green = 0,
-            Red = 1,
-            Black = 2
+            Black = 1,
+            Red = 2
         };
         enum class Bets
         {
@@ -34,15 +34,15 @@ class TableRoulette
         };
         enum class Column
         {
-            Left = 1,
-            Middle = 2,
+            Columnn_One = 1,
+            Column_Two = 2,
             Column_Three = 3
         };
     };
-    Data::Color CalcRouletteColorAndOdd();
-    void PlayColumn(Player::Data& data,  Data::Column& aColumn);
-    void PlayRouColorOrOdd(Player::Data& aPlayer, Data::Color& aColor);
-    void PlayTable(Player::Data& aPlayer, Data& aRoulette, Data::Bets& aBets);
-    void RouletteBet(Player::Data& aPlayer,  Data& aRoulette, Data::Bets& aBets);
-    void PlayStraight(Player::Data& aPlayer, Data& aRoulette);
+    Data::Color CalcRoulleteOddEven();
+    void PlayColumn(Player::Data& data, const int aColumnValue);
+    void PlayColor(Player::Data& aPlayer);
+    void PlayTable(Player::Data& aPlayer, Data& aRoulette);
+    void RouletteBet(Player::Data& aPlayer, const Data& aRoulette);
+    void PlayStraight(Player::Data& aPlayer, Data aRoulette);
 };

@@ -166,22 +166,16 @@ void SayRulesTable(const Casino::GameState& aGameState)
             std::cout << "Just roll higher than me!" << std::endl;
             break;
         }
-        case Casino::GameState::Table_Roulette:
-        {
-            std::cout << "There are four bet types: \n"
-                         << "1. Straight, guess a the number the ball lands on, between 0 and 36\n" <<
-                             "2. Red or Black, guess the color of the number the ball lands on! However, the 0 is green and you cant guess that. \n" <<
-                                 "3. Odd or Even, guess if the number is odd or even! However, the 0 doesnt count as either!" <<
-                                     "4. Column Bet, there are three columns where the ball can land on.\n " <<
-                                     "Left, middle, or right. The numbers are shown here (insert picture)" << std::endl;
-                                 
-            break;
-        }
         case Casino::GameState::Exit_Main:
         case Casino::GameState::Winstreak:
         default:
         {
             Casino::SayInputError();
+            break;
+        }
+        case Casino::GameState::Table_Roulette:
+        {
+            
             break;
         }
     }
@@ -358,8 +352,8 @@ int SubCalc(const int aValue1, const int aSubValue)
     }
     return value;
 }
-void UpdateMoneyTable(int aBet, const Casino::GameState& aGameState, const bool aIsWin, Player::Data& aPlayer,
-                      TableGuess::Data& aGuess, TableOddEven::Data& aOddEven, TableHighRoll::Data& aHighRoll, TableRoulette::Data& aRoulette, TableRoulette::Data::Bets& aBetState)
+void UpdateMoneyTable(const int aBet, const Casino::GameState& aGameState, const bool aIsWin, Player::Data& aPlayer,
+                      TableGuess::Data& aGuess, TableOddEven::Data& aOddEven, TableHighRoll::Data& aHighRoll, TableRoulette::Data aRoulette)
 {
     const int betMoney = aBet;
     const bool isWin = aIsWin;
@@ -370,6 +364,7 @@ void UpdateMoneyTable(int aBet, const Casino::GameState& aGameState, const bool 
     {
         case Casino::GameState::Table_Guess:
         {
+
             tableTotal = (betMoney * aGuess.myTableMultiplier) + aGuess.myTableBonus;
             if (isWin)
             {
@@ -423,11 +418,18 @@ void UpdateMoneyTable(int aBet, const Casino::GameState& aGameState, const bool 
             }
             break;
         }
+        case Casino::GameState::Winstreak:
+        {
+            break;
+        }
+        case Casino::GameState::Exit_Main:
+        {
+            break;
+        }
         case Casino::GameState::Table_Roulette:
         {
-            
-        
-           switch (aBetState)
+            TableRoulette::Data::Bets betState = {};
+           switch (betState)
            {
                case TableRoulette::Data::Bets::Invalid:
                {
@@ -512,14 +514,6 @@ void UpdateMoneyTable(int aBet, const Casino::GameState& aGameState, const bool 
             
             break;
         }
-        case Casino::GameState::Winstreak:
-        {
-            break;
-        }
-        case Casino::GameState::Exit_Main:
-        {
-            break;
-        }
         default:
         {
             break;
@@ -565,7 +559,7 @@ int UpdateBet(Player::Data& player)
     }
     return 0;
 }
-void PlayGame(Casino::GameState aGameState, Player::Data& aPlayer, TableRoulette::Data& aRoulette, TableRoulette::Data::Bets& aBetState)
+void PlayGame(Casino::GameState aGameState, Player::Data& aPlayer, TableRoulette::Data& aRoulette)
 {
     switch (aGameState)
     {
@@ -589,7 +583,7 @@ void PlayGame(Casino::GameState aGameState, Player::Data& aPlayer, TableRoulette
         }
         case Casino::GameState::Table_Roulette:
         {
-            TableRoulette::PlayTable(aPlayer, aRoulette, aBetState);
+            TableRoulette::PlayTable(aPlayer, aRoulette);
             break;
         }
 
@@ -606,12 +600,11 @@ void BeginGameLogic(Casino::GameState& aGameState, Player::Data& aPlayer, TableG
                     TableHighRoll::Data& aHighRoll, TableRoulette::Data& aRoulette)
 {
     const int bet = UpdateBet(aPlayer);
-    TableRoulette::Data::Bets  betState = {};
-    PlayGame(aGameState, aPlayer, aRoulette,  betState);
-    UpdateMoneyTable(bet, aGameState, aPlayer.isWin, aPlayer, aGuess, aOddEven, aHighRoll,aRoulette, betState);
+    PlayGame(aGameState, aPlayer, aRoulette);
+    UpdateMoneyTable(bet, aGameState, aPlayer.isWin, aPlayer, aGuess, aOddEven, aHighRoll,aRoulette);
     UpdateWinStreak(aPlayer.isWin, aPlayer);
 }
-void EnterTableMenu(Casino::GameState aGameState, Player::Data& aPlayer, Casino::Data& aCasino, TableGuess::Data& aGuess,
+void EnterTable(Casino::GameState aGameState, Player::Data& aPlayer, Casino::Data& aCasino, TableGuess::Data& aGuess,
                 TableOddEven::Data& aOddEven, TableHighRoll::Data& aHighRoll, TableRoulette::Data& aRoulette)
 {
     aCasino.IsTableActive = true;
@@ -675,7 +668,7 @@ void MainMenu(Casino::GameState aGameState, Player::Data& aPlayer, Casino::Data&
                     SayMoneySum(aPlayer);
                 }
             }
-            EnterTableMenu(aGameState, aPlayer, aCasino, guess, oddEven, highRoll, roulette);
+            EnterTable(aGameState, aPlayer, aCasino, guess, oddEven, highRoll, roulette);
             break;
         }
         case Casino::GameState::Winstreak:

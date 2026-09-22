@@ -1,5 +1,6 @@
 #pragma once
 #include "Casino.h"
+#include "Data.h"
 #include "Player.h"
 #include "TableGuess.h"
 #include "TableHighRoll.h"
@@ -28,10 +29,10 @@ void SayMoneySum(const Player::Data& aPlayer);
 int SubCalc(int aValue1, int aSubValue);
 
 
-void UpdateMoneyTable( int aBet, const Casino::GameState& aGameState, const bool aIsWin, Player::Data& aPlayer,
-                      TableGuess::Data& aGuess, TableOddEven::Data& aOddEven, TableHighRoll::Data& aHighRoll, TableRoulette::Data& aRoulette,TableRoulette::Data::Bets& aBetState);
+void UpdateMoneyTable(int aBet, Casino::GameState& aGameState, bool aIsWin, Player::Data& aPlayer,
+    TableGuess::Data& aGuess, TableOddEven::Data& aOddEven,  TableHighRoll::Data& aHighRoll);
 void UpdateWinStreak(bool aIsWin, Player::Data& aPlayer);
-void EnterTableMenu(Casino::GameState aGameState, Player::Data& aPlayer, TableGuess::Data& aGuess, TableOddEven::Data& aOddEven,  TableHighRoll::Data& aHighRoll);
+void EnterTable(Casino::GameState aGameState, Player::Data& aPlayer, TableGuess::Data& aGuess, TableOddEven::Data& aOddEven,  TableHighRoll::Data& aHighRoll);
 void MainMenu(Casino::GameState aGameState, Player::Data& aPlayer);
 void BeginGameLogic(Casino::GameState& aGameState, Player::Data& aPlayer, TableGuess::Data& aGuess, TableOddEven::Data& aOddEven,  TableHighRoll::Data& aHighRoll,TableRoulette::Data& aRoulette);
 void PlayGame(Casino::GameState aGameState, Player::Data& aPlayer, TableRoulette::Data& aRoulette);

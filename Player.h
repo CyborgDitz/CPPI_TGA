@@ -1,10 +1,14 @@
 #pragma once
 
-class  Player
+namespace  Player
 {
-    public:
     struct Data
     {
+        int myMoney = 99999;
+        const int streakArrayMax = 5;
+        int  winStreak[5] = {0};
+        bool isWin = {};
+        bool isPoor = false;
         
         enum class Streak
         {
@@ -13,11 +17,4 @@ class  Player
             Loss
         };
     };
-private:
-        int myMoney = 99999;
-        const int streakArrayMax = 5;
-        int  winStreak[5] = {0};
-        bool isWin = {};
-        bool isPoor = false;
-    
 };

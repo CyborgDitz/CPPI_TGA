@@ -130,7 +130,6 @@
   <ItemGroup>
     <ClCompile Include="Casino.cpp" />
     <ClCompile Include="Hasardspel.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="TableGuess.cpp" />
     <ClCompile Include="TableHighRoll.cpp" />
     <ClCompile Include="TableOddEven.cpp" />
@@ -138,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Casino.h" />
+    <ClInclude Include="Data.h" />
     <ClInclude Include="Hasardspel.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="TableGuess.h" />

@@ -5,7 +5,7 @@
 #include "Casino.h"
 #include "Data.h"
 
-
+namespace TableHighRoll
 {
     void PlayTable(Player::Data& aPlayer)
     {
