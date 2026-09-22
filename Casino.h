@@ -15,18 +15,7 @@ class Casino
         No_Coin,
         Odd,
         Even
-    };
-    void SayInputError();
-    int InputInt();
-    int RollDie();
-    int RollRoulette();
-    void SayWin();
-    void SayLose();
-    bool isMainActive = false;
-    bool IsTableActive = false;
-    
-    OddCoin getData() const;
-    OddCoin CalcOddEven(int aDie);
+    }; 
     enum class TableMenu
     {
         Exit_Table,
@@ -43,11 +32,42 @@ class Casino
         Table_Roulette,
         Winstreak
     };
-    
+    int InputInt();
+    int RollDie();
+    int RollRoulette();
+    void SayInputError();
+    void SayWin();
+    void SayLose();
+    void SayAskReadyToRoll();
+    void SayEnterCasino();
+    void SayTableMenu();
+    void SayTableOutCashed();
+    void SayTableTreshold(const Casino::GameState& aGameState, 
+      const  TableGuess::Data& aGuess, const TableOddEven::Data& aOddEven, const TableHighRoll::Data& aHighRoll,const TableRoulette::Data& aRoulette);
+    void SayTableMoney(const Casino::GameState& aGameState,
+        const TableGuess::Data& aGuess, const TableOddEven::Data& aOddEven,const TableHighRoll::Data& aHighRoll, const TableRoulette::Data& aRoulette);
+    void SayGreetingTable(const Casino::GameState& aGameState);
 
+    void SayPlayAgain();
+    void PrintWinStreak(const Player::Data& aPlayer);
+    void SayByeCasino();
+    void SayRulesTable(const Casino::GameState& aGameState, Casino &aCasino);
+    void SayMainMenuChoices();
+    void SayMoneySum(const Player::Data& aPlayer);
+    void PlayOddEven(GameState& aGameState, Player& aPlayer);
+    
+    bool isMainActive = false;
+    bool IsTableActive = false;
+    
+    OddCoin getData() const;
+    OddCoin CalcOddEven(int aDie);
+
+    
+    
     private:
     TableRoulette tableRoulette;
     TableGuess tableGuess;
     TableHighRoll tableHighRoll;
     TableOddEven tableOddEven;
+    Player player;
 };

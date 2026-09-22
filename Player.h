@@ -3,9 +3,12 @@
 class  Player
 {
     public:
+    Player();
+    ~Player();
+    bool isWin = {};
+    bool isPoor = false;
     struct Data
     {
-        
         enum class Streak
         {
             Null,
@@ -13,11 +16,9 @@ class  Player
             Loss
         };
     };
-private:
         int myMoney = 99999;
         const int streakArrayMax = 5;
         int  winStreak[5] = {0};
-        bool isWin = {};
-        bool isPoor = false;
+private:
     
 };

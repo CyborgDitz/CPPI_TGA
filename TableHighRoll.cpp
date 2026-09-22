@@ -5,9 +5,7 @@
 #include "Casino.h"
 #include "Data.h"
 
-
-{
-    void PlayTable(Player::Data& aPlayer)
+    void PlayTable(Player& aPlayer)
     {
         {
             int differenceValue;
@@ -45,8 +43,4 @@
             }
         }
     }
-    void SayAskReadyToRoll()
-    {
-        std::cout << "Are you ready to start? Press any button to begin" << std::endl;
-    }
-}
+ 

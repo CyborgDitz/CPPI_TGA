@@ -6,6 +6,9 @@
 
 class TableRoulette
 {
+public:
+    TableRoulette();
+    ~TableRoulette();
     struct Data
     {
         int myMoney = {1000};
@@ -40,6 +43,7 @@ class TableRoulette
         };
     };
     Data::Color CalcRouletteColorAndOdd();
+private:
     void PlayColumn(Player::Data& data,  Data::Column& aColumn);
     void PlayRouColorOrOdd(Player::Data& aPlayer, Data::Color& aColor);
     void PlayTable(Player::Data& aPlayer, Data& aRoulette, Data::Bets& aBets);

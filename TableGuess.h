@@ -5,7 +5,10 @@
 
 class TableGuess
 {
-    void PlayTable(Casino::GameState& aGameState, Player::Data& aPlayer);
+    TableGuess();
+    ~TableGuess();
+public:
+    void PlayTableGuess(Casino::GameState& aGameState, Player::Data& aPlayer);
     struct Data
     {
         int myMoney = {100};
@@ -16,4 +19,5 @@ class TableGuess
         const int inputTableMin = 2;
         const int inputTableMax = 12;
     };
+private:
 };
