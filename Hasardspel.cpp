@@ -12,34 +12,46 @@ void SayEnterCasino()
     std::cout << "Welcome to the Casino, friend! \n" << std::endl;
     std::cout << "What would you like to do? \n" << std::endl;
 }
+
 void SayTableMenu()
 {
-    std::cout << "1: Play the game. \t 2: Show Rules.\n" "3: Show Win Streak \t 0: Leave and go back to Main Menu" << std::endl;
+    std::cout << "1: Play the game. \t 2: Show Rules.\n" "3: Show Win Streak \t 0: Leave and go back to Main Menu" <<
+        std::endl;
 };
+
 void SayTableOutCashed()
 {
     std::cout << "You have claimed too much of this table, begone!" << std::endl;
 }
+
 void SayPlayAgain()
 {
     std::cout << "Want to play again? Y or N?" << std::endl;
 }
-void SayTableTreshold(const Casino::GameState& aGameState,
-                      const TableGuess::Data& aGuess,const TableOddEven::Data& aOddEven,const TableHighRoll::Data& aHighRoll, const TableRoulette::Data& aRoulette)
+
+void SayTableTreshold(Casino& aCasino)
 {
-    // debug SayTableSpoils(aGameState);
-    // optimizable cases for multiple usage of code (bools), use for loop if true with enum
-    switch (aGameState)
-    {
-        case Casino::GameState::Table_Guess:
+    switch (aCasino.GetGameState())
+    { 
+    case Casino::GameState::Table_Guess_LowStakes:
         {
-            if (aGuess.myMoney >= aGuess.myTreshBig)
-            {
-                std::cout << "We have a big winner here, why quit when the fire is hot amiright?" << std::endl;
-            }
-            else if (aGuess.myMoney <= aGuess.myTreshSmall)
+            aCasino.GetTableGuess().SayGuessTreshHold();
+            break;
+        }
+    case Casino::GameState::Table_Guess_HighStakes:
+        {
+            aCasino.GetTableGuess2().SayGuessTreshHold();
+            break;
+        }
+    case Casino::GameState::Table_OddEven:
+        {
+            if (aCasino.GetTableOddEven().GetMoney() >= aCasino.GetTableOddEven().GetTreshLoser())
             {
                 std::cout << "Try again, regain your losses!?" << std::endl;
+            }
+            else if (aCasino.GetTableOddEven().GetMoney() <= aCasino.GetTableOddEven().GetTreshWinner())
+            {
+                std::cout << "We have a big winner here, why quit when the fire is hot amiright?" << std::endl;
             }
             else
             {
@@ -47,15 +59,15 @@ void SayTableTreshold(const Casino::GameState& aGameState,
             }
             break;
         }
-        case Casino::GameState::Table_OddEven:
+    case Casino::GameState::Table_HighRoll:
         {
-            if (aOddEven.myMoney >= aOddEven.myTreshBig)
-            {
-                std::cout << "We have a big winner here, why quit when the fire is hot amiright?" << std::endl;
-            }
-            else if (aOddEven.myMoney <= aOddEven.myTreshSmall)
+            if (aCasino.GetTableHighRoll().GetMoney() >= aCasino.GetTableHighRoll().GetTreshLoser())
             {
                 std::cout << "Try again, regain your losses!?" << std::endl;
+            }
+            else if (aCasino.GetTableHighRoll().GetMoney() <= aCasino.GetTableHighRoll().GetTreshWinner())
+            {
+                std::cout << "We have a big winner here, why quit when the fire is hot amiright?" << std::endl;
             }
             else
             {
@@ -63,15 +75,15 @@ void SayTableTreshold(const Casino::GameState& aGameState,
             }
             break;
         }
-        case Casino::GameState::Table_HighRoll:
+    case Casino::GameState::Table_Roulette:
         {
-            if (aHighRoll.myMoney >= aHighRoll.myTreshBig)
-            {
-                std::cout << "We have a big winner here, why quit when the fire is hot amiright?" << std::endl;
-            }
-            else if (aHighRoll.myMoney <= aHighRoll.myTreshBig)
+            if (aCasino.GetTableRoulette().GetMoney() >= aCasino.GetTableRoulette().GetTreshLoser())
             {
                 std::cout << "Try again, regain your losses!?" << std::endl;
+            }
+            else if (aCasino.GetTableRoulette().GetMoney() <= aCasino.GetTableRoulette().GetTreshWinner())
+            {
+                std::cout << "We have a big winner here, why quit when the fire is hot amiright?" << std::endl;
             }
             else
             {
@@ -79,141 +91,98 @@ void SayTableTreshold(const Casino::GameState& aGameState,
             }
             break;
         }
-        case Casino::GameState::Table_Roulette:
-        {
-            if (aRoulette.myMoney >= aRoulette.myTreshBig)
-            {
-                std::cout << "We have a big winner here, why quit when the fire is hot amiright?" << std::endl;
-            }
-            else if (aRoulette.myMoney <= aRoulette.myTreshSmall)
-            {
-                std::cout << "Try again, regain your losses!?" << std::endl;
-            }
-            else
-            {
-                std::cout << "You should  spend that money here and nowhere else!" << std::endl;
-            }
-            break;
-        }
-        case Casino::GameState::Exit_Main:
-        case Casino::GameState::Winstreak:
-        default:
+    case Casino::GameState::Exit_Main:
+    case Casino::GameState::Winstreak:
+    default:
         {
             break;
         }
-        
     }
 }
 
-void SayByeCasino(Player::Data& aPlayer)
+void SayByeCasino(Casino& aCasino)
 {
-    SayMoneySum(aPlayer);
+    SayMoneySum(aCasino);
     std::cout << "Goodbye friend, and  good luck!" << std::endl;
     system("pause");
 }
-void SayGreetingTable(const Casino::GameState& aGameState)
+
+void SayGreetingTable(Casino& aCasino)
 {
-    switch (aGameState)
+    switch (aCasino.GetGameState())
     {
-        case Casino::GameState::Table_OddEven:
+    case Casino::GameState::Table_Guess_LowStakes:
         {
-            std::cout << "This is the best table for the best gambler, the guessing table! \n"
-                << "If you guess the sum of my 2 dice then you win! \n" << std::endl;
+            std::cout << "This is the best table for the best gambler, the guessing table! \n"<< std::endl;
             break;
         }
-        case Casino::GameState::Table_Guess:
+    case Casino::GameState::Table_OddEven:
         {
             std::cout << "Welcome to the odd or even table!" << std::endl;
             break;
         }
-        case Casino::GameState::Table_HighRoll:
+    case Casino::GameState::Table_HighRoll:
         {
-            
+            std::cout << "Welcome to the hiiIIiiIIgh Rooool!!" << std::endl;
             break;
         }
-        case Casino::GameState::Table_Roulette:
+    case Casino::GameState::Table_Roulette:
         {
             std::cout << "Welcome to the ROULETTE!" << std::endl;
             break;
         }
-        case Casino::GameState::Exit_Main:
-        case Casino::GameState::Winstreak:
+    case Casino::GameState::Exit_Main:
+    case Casino::GameState::Winstreak:
         {
             break;
         }
-        default:
+    default:
         {
             break;
         }
     }
 }
-void SayRulesTable(const Casino::GameState& aGameState)
-{
-    switch (aGameState)
-    {
-        case Casino::GameState::Table_Guess:
-        {
-            std::cout << "The table is open! So give me one between 2 and 12! Lets gamble!" << std::endl;
-            break;
-        }
-        case Casino::GameState::Table_OddEven:
-        {
-            std::cout << "The table is open! So guess if its 1: Odd, 2: even! 50 50!" << std::endl;
-            break;
-        }
-        case Casino::GameState::Table_HighRoll:
-        {
-            std::cout << "Just roll higher than me!" << std::endl;
-            break;
-        }
-        case Casino::GameState::Exit_Main:
-        case Casino::GameState::Winstreak:
-        default:
-        {
-            Casino::SayInputError();
-            break;
-        }
-        case Casino::GameState::Table_Roulette:
-        {
-            
-            break;
-        }
-    }
-}
+
 
 void SayMainMenuChoices()
 {
     std::cout << "You can choose between these options \n"
-        << "1: Table 1: Guess the Dice \t 2: Table 2: Odd or Even \n"
-        << "3: Table 3: Roll Higher \t 4: Table 4: Roulette\n"
-        << "5: Show Win / Loss Statistics \t 0: Or leave the casino!\n" << std::endl;
+        << "1: Table 1: Guess the Dice Low Stakes\t"<<"Table 2. Guess the Dice High Stakes\n"
+        << "3:Table 3: Odd or Even\t" << "4: Table 4: Roll Higher\n "
+        << "5: Table 5: Roulette\t" << "6: Show Win / Loss Statistics\n "
+       << "0: Or leave the casino!\n" << std::endl;
 }
-void SayMoneySum(const Player::Data& aPlayer)
+
+void SayMoneySum(Casino& aCasino)
 {
-    std::cout << "You currently have " << aPlayer.myMoney << " dollaridoos! \n";
+    std::cout << "You currently have " << aCasino.GetPlayer().GetMoney() << " dollaridoos! \n";
 }
-void SayTableMoney(const Casino::GameState& aGameState, const TableGuess::Data& aGuess, const TableOddEven::Data& aOddEven, 
-    const TableHighRoll::Data& aHighRoll,const TableRoulette::Data& aRoulette)
+
+void SayTableMoney(Casino& aCasino)
 {
-    if (aGameState == Casino::GameState::Table_Guess)
+    if (aCasino.GetGameState() == Casino::GameState::Table_Guess_LowStakes)
     {
-        std::cout << "This table currently have " << aGuess.myMoney << " dollaridoos! \n";
+        std::cout << "This table currently have " << aCasino.GetTableGuess().GetMoney() << " dollaridoos! \n";
     }
-    else if (aGameState == Casino::GameState::Table_OddEven)
+    else if (aCasino.GetGameState() == Casino::GameState::Table_Guess_HighStakes)
     {
-        std::cout << "This table currently have " << aOddEven.myMoney << " dollaridoos!\n";
+        std::cout << "This table currently have " << aCasino.GetTableGuess().GetMoney() << " dollaridoos! \n";
     }
-    else if (aGameState == Casino::GameState::Table_HighRoll)
+    else if (aCasino.GetGameState() == Casino::GameState::Table_OddEven)
     {
-        std::cout << "This table currently have " << aHighRoll.myMoney << " dollaridoos! \n";
+        std::cout << "This table currently have " << aCasino.GetTableOddEven().GetMoney() << " dollaridoos!\n";
     }
-    else if (aGameState == Casino::GameState::Table_Roulette)
+    else if (aCasino.GetGameState() == Casino::GameState::Table_HighRoll)
     {
-        std::cout << "This table currently have " << aRoulette.myMoney << " dollaridoos! \n";
+        std::cout << "This table currently have " << aCasino.GetTableHighRoll().GetMoney() << " dollaridoos! \n";
+    }
+    else if (aCasino.GetGameState() == Casino::GameState::Table_Roulette)
+    {
+        std::cout << "This table currently have " << aCasino.GetTableRoulette().GetMoney() << " dollaridoos! \n";
     }
 }
 
-void ExitMenu(Casino::Data& aCasino)
+void ExitMenu(Casino& aCasino)
 {
     if (aCasino.IsTableActive && aCasino.isMainActive)
     {
@@ -224,126 +193,138 @@ void ExitMenu(Casino::Data& aCasino)
         aCasino.isMainActive = false;
     }
 }
-void PrintWinStreak(const Player::Data& aPlayer)
+
+void PrintWinStreak(Casino& aCasino)
 {
-    const int length = aPlayer.streakArrayMax;
-    
-    
+    int length = aCasino.GetPlayer().GetStreakMax();
+
+
     std::cout << "Your win and loss score is: " << std::endl;
-    for (int i = length-1; i >= 0; i--)
+    for (int i = length - 1; i >= 0; i--)
     {
-        if (static_cast<int>(aPlayer.winStreak[i]) == 1)
+        if (aCasino.GetPlayer().GetWinStreak()[i] == 1)
         {
             std::cout << "W" << std::endl;
         }
-        else if (static_cast<int>(aPlayer.winStreak[i]) == 2)
+        else if (aCasino.GetPlayer().GetWinStreak()[i] == 2)
         {
             std::cout << "L" << std::endl;
         }
-        if (static_cast<int>(aPlayer.winStreak[i]) == 0)
+        else if ((aCasino.GetPlayer().GetWinStreak()[i]) == 0)
         {
             std::cout << "_" << std::endl;
         }
-        
     }
 }
-void UpdateWinStreak(bool aIsWin, Player::Data& aPlayer)
+
+void UpdateWinStreak(Casino& aCasino)
 {
-    const int winValue = 1;
-    const int lossValue = 2;
+    int winValue = 1;
+    int lossValue = 2;
     int updateValue;
-    if (aIsWin == true)
+    if (aCasino.GetPlayer().GetIsWin() == true)
     {
         updateValue = winValue;
     }
     else
     {
-       updateValue = lossValue ;
+        updateValue = lossValue;
     }
 
-    const int length = aPlayer.streakArrayMax;
-    for (int i = length-1; i >= 0; i--)
+    int length = aCasino.GetPlayer().GetStreakMax();
+    for (int i = length - 1; i >= 0; i--)
     {
-        aPlayer.winStreak[i + 1] = aPlayer.winStreak[i];
-        aPlayer.winStreak[i] = updateValue;
+        aCasino.GetPlayer().SetWinStreak(i + 1, aCasino.GetPlayer().GetWinStreak()[i]);
+        aCasino.GetPlayer().SetWinStreak(i, updateValue);
     }
-    PrintWinStreak(aPlayer);
+    PrintWinStreak(aCasino);
 }
-bool AmIPoor(Player::Data& aPlayer)
+
+bool AmIPoor(Casino& aCasino)
 {
-    if (aPlayer.myMoney <= 0 && aPlayer.isPoor == false)
+    if (aCasino.GetPlayer().GetMoney() <= 0 && aCasino.GetPlayer().GetIsPoor() == false)
     {
         std::cout << "Get out of our casino you dud!" << std::endl;
-        aPlayer.isPoor = true;
+        aCasino.GetPlayer().SetIsPoor(true);
         return true;
     }
     else
     {
+        aCasino.GetPlayer().SetIsPoor(false);
         return false;
     }
-
 }
-bool IsTablePoor(const Casino::GameState& aGameState, const TableGuess::Data& aGuess, const TableOddEven::Data& aOddEven,
-                 const TableHighRoll::Data& aHighRoll, const TableRoulette::Data& aRoulette)
+
+bool IsTablePoor(Casino& aCasino)
 {
     //TODO enum refactor
-    const int tableWinCap = 0;
+    int tableWinCap = 0;
 
-    switch (aGameState)
+    switch (aCasino.GetGameState())
     {
-        case Casino::GameState::Table_Guess:
+    case Casino::GameState::Table_Guess_LowStakes:
         {
-            if (aGuess.myMoney <= tableWinCap)
+            if (aCasino.GetTableGuess().GetMoney() <= tableWinCap)
             {
                 SayTableOutCashed();
                 return true;
             }
             break;
         }
-        case Casino::GameState::Table_OddEven:
+    case Casino::GameState::Table_Guess_HighStakes:
         {
-            if (aOddEven.myMoney <= tableWinCap)
+            if (aCasino.GetTableGuess2().GetMoney() <= tableWinCap)
             {
                 SayTableOutCashed();
                 return true;
             }
             break;
         }
-        case Casino::GameState::Table_HighRoll:
+    case Casino::GameState::Table_OddEven:
         {
-            if (aHighRoll.myMoney <= tableWinCap)
+            if (aCasino.GetTableOddEven().GetMoney() <= tableWinCap)
             {
                 SayTableOutCashed();
                 return true;
             }
             break;
         }
-        case Casino::GameState::Table_Roulette:
+    case Casino::GameState::Table_HighRoll:
         {
-            if (aRoulette.myMoney <= tableWinCap)
+            if (aCasino.GetTableHighRoll().GetMoney() <= tableWinCap)
             {
                 SayTableOutCashed();
                 return true;
             }
             break;
         }
-        case Casino::GameState::Exit_Main:
+    case Casino::GameState::Table_Roulette:
+        {
+            if (aCasino.GetTableRoulette().GetMoney() <= tableWinCap)
+            {
+                SayTableOutCashed();
+                return true;
+            }
             break;
-        case Casino::GameState::Winstreak:
-            break;
-        default:
+        }
+    case Casino::GameState::Exit_Main:
+        break;
+    case Casino::GameState::Winstreak:
+        break;
+    default:
         {
             break;
         }
     }
     return false;
 }
-int SubCalc(const int aValue1, const int aSubValue)
+
+int SubCalc(int aValue1, int aSubValue)
 {
-    //TODO  const args refactor
+    //TODO   args refactor
     int value = aValue1;
-    const int subValue = aSubValue;
-    const int subMin = 0;
+    int subValue = aSubValue;
+    int subMin = 0;
 
     value -= subValue;
     if (value < subMin)
@@ -352,192 +333,127 @@ int SubCalc(const int aValue1, const int aSubValue)
     }
     return value;
 }
-void UpdateMoneyTable(const int aBet, const Casino::GameState& aGameState, const bool aIsWin, Player::Data& aPlayer,
-                      TableGuess::Data& aGuess, TableOddEven::Data& aOddEven, TableHighRoll::Data& aHighRoll, TableRoulette::Data aRoulette)
+
+void UpdateMoneyTable(int aBet, Casino& aCasino)
 {
-    const int betMoney = aBet;
-    const bool isWin = aIsWin;
-
-    int tableTotal;
-
-    switch (aGameState)
-    {
-        case Casino::GameState::Table_Guess:
+    int betMoney = aBet;
+    int tableTotal{};
+    int tableMult{};
+    int tableBonus{};
+    switch (aCasino.GetGameState())
+    { //if case
+    case Casino::GameState::Table_Guess_LowStakes:
         {
-
-            tableTotal = (betMoney * aGuess.myTableMultiplier) + aGuess.myTableBonus;
-            if (isWin)
-            {
-                aPlayer.myMoney += tableTotal;
-                aGuess.myMoney = SubCalc(aGuess.myMoney, tableTotal);
-                std::cout << "You WON: " << tableTotal << " moneys!!" << std::endl;
-            }
-            else
-            {
-                aPlayer.myMoney = SubCalc(aPlayer.myMoney, tableTotal);
-                aGuess.myMoney += tableTotal;
-                std::cout << "You LOST: " << tableTotal << " moneys!!" << std::endl;
-            }
+            // movable to inside Class
+            tableTotal = (betMoney * aCasino.GetTableGuess().GetTableMultiplier()) + aCasino.GetTableGuess().
+                GetTableBonus();
             break;
         }
-        case Casino::GameState::Table_OddEven:
+    case Casino::GameState::Table_Guess_HighStakes:
         {
-            tableTotal = (betMoney * aOddEven.myTableMultiplier % betMoney) + aOddEven.myTableBonus;
-            if (isWin)
-            {
-                aPlayer.myMoney += tableTotal;
-                aOddEven.myMoney = SubCalc(aOddEven.myMoney, tableTotal);
-
-                std::cout << "You WON: " << tableTotal << " moneys!!" << std::endl;
-            }
-            else
-            {
-                aPlayer.myMoney = SubCalc(aPlayer.myMoney, tableTotal);
-                aOddEven.myMoney += tableTotal;
-                std::cout << "You LOST: " << tableTotal << " myneys!!" << std::endl;
-            }
+            // movable to inside Class
+            tableTotal = (betMoney * aCasino.GetTableGuess2().GetTableMultiplier()) + aCasino.GetTableGuess().
+                GetTableBonus();
             break;
         }
-        case Casino::GameState::Table_HighRoll:
+    case Casino::GameState::Table_OddEven:
         {
+            tableMult = aCasino.GetTableOddEven().GetTableMultiplier();
+            tableBonus = aCasino.GetTableOddEven().GetTableBonus();
+            tableTotal = (betMoney * tableMult % betMoney) + tableBonus;
 
-            tableTotal = (betMoney * aHighRoll.myTableMultiplier) + aHighRoll.myTableBonus;
-            if (isWin)
-            {
-                aPlayer.myMoney += tableTotal;
-                aHighRoll.myMoney = SubCalc(aHighRoll.myMoney, tableTotal);
-                std::cout << "You WON: " << tableTotal << " moneys!!" << std::endl;
-            }
-            else
-            {
-                aPlayer.myMoney = SubCalc(aPlayer.myMoney, tableTotal);
-                aHighRoll.myMoney += tableTotal;
-
-
-                std::cout << "You LOST: " << tableTotal << " moneys!!" << std::endl;
-            }
             break;
         }
-        case Casino::GameState::Winstreak:
+    case Casino::GameState::Table_HighRoll:
         {
+            tableMult = aCasino.GetTableHighRoll().GetTableMultiplier();
+            tableBonus = aCasino.GetTableHighRoll().GetTableBonus();
+            tableTotal = (betMoney * (tableMult) + tableBonus);
+
             break;
         }
+    case Casino::GameState::Table_Roulette:
+        {
+            switch (aCasino.GetTableRoulette().GetBets())
+            {
+            case TableRoulette::Bets::Invalid:
+                {
+                    std::cout << "no!" << std::endl;
+                    break;
+                }
+            case TableRoulette::Bets::Straight_Gay:
+                {
+                    tableTotal = (betMoney * aCasino.GetTableRoulette().GetStraightGayMult());
+
+                    break;
+                }
+
+            case TableRoulette::Bets::Red_Black:
+                {
+                    tableTotal = (betMoney * aCasino.GetTableRoulette().GetRedBlackMult());
+
+                    break;
+                }
+            case TableRoulette::Bets::Odd_Even:
+                {
+                    tableTotal = (betMoney * aCasino.GetTableRoulette().GetOddEvenMult());
+
+                    break;
+                }
+            case TableRoulette::Bets::Column:
+                {
+                    tableTotal = (betMoney * aCasino.GetTableRoulette().GetColumnMult());
+
+                    break;
+                }
+            }
         case Casino::GameState::Exit_Main:
-        {
-            break;
-        }
-        case Casino::GameState::Table_Roulette:
-        {
-            TableRoulette::Data::Bets betState = {};
-           switch (betState)
-           {
-               case TableRoulette::Data::Bets::Invalid:
-               {
-                   std::cout << "no!" << std::endl;
-                   break;
-               }
-               case TableRoulette::Data::Bets::Straight_Gay:
-               {
-                   tableTotal = (betMoney * aRoulette.myStraighGayMult);
-                   if (isWin)
-                   {
-                       aPlayer.myMoney += tableTotal;
-                       aRoulette.myMoney = SubCalc(aRoulette.myMoney, tableTotal);
-                       std::cout << "You WON: " << tableTotal << " moneys!!" << std::endl;
-                   }
-                   else
-                   {
-                       aPlayer.myMoney = SubCalc(aPlayer.myMoney, tableTotal);
-                       aRoulette.myMoney += tableTotal;
-                
-                       std::cout << "You LOST: " << tableTotal << " moneys!!" << std::endl;
-                   }
-                   break;
-               }
-             
-               case TableRoulette::Data::Bets::Red_Black:
-               {
-                   tableTotal = (betMoney * aRoulette.myRedBlackMult);
-                   if (isWin)
-                   {
-                       aPlayer.myMoney += tableTotal;
-                       aRoulette.myMoney = SubCalc(aRoulette.myMoney, tableTotal);
-                       std::cout << "You WON: " << tableTotal << " moneys!!" << std::endl;
-                   }
-                   else
-                   {
-                       aPlayer.myMoney = SubCalc(aPlayer.myMoney, tableTotal);
-                       aRoulette.myMoney += tableTotal;
-                
-                       std::cout << "You LOST: " << tableTotal << " moneys!!" << std::endl;
-                   }
-                   break;
-               }
-               case TableRoulette::Data::Bets::Odd_Even:
-               {
-                   tableTotal = (betMoney * aRoulette.myOddEvenMult);
-                   if (isWin)
-                   {
-                       aPlayer.myMoney += tableTotal;
-                       aRoulette.myMoney = SubCalc(aRoulette.myMoney, tableTotal);
-                       std::cout << "You WON: " << tableTotal << " moneys!!" << std::endl;
-                   }
-                   else
-                   {
-                       aPlayer.myMoney = SubCalc(aPlayer.myMoney, tableTotal);
-                       aRoulette.myMoney += tableTotal;
-                
-                       std::cout << "You LOST: " << tableTotal << " moneys!!" << std::endl;
-                   }
-                   break;
-               }
-               case TableRoulette::Data::Bets::Column:
-               {
-                   tableTotal = (betMoney * aRoulette.myColumnMult);
-                   if (isWin)
-                   {
-                       aPlayer.myMoney += tableTotal;
-                       aRoulette.myMoney = SubCalc(aRoulette.myMoney, tableTotal);
-                       std::cout << "You WON: " << tableTotal << " moneys!!" << std::endl;
-                   }
-                   else
-                   {
-                       aPlayer.myMoney = SubCalc(aPlayer.myMoney, tableTotal);
-                       aRoulette.myMoney += tableTotal;
-                
-                       std::cout << "You LOST: " << tableTotal << " moneys!!" << std::endl;
-                   }
-                   break;
-               }
-
-           }
-            
-            break;
-        }
+            {
+                break;
+            }
+        case Casino::GameState::Winstreak:
+            {
+                break;
+            }
         default:
-        {
-            break;
+            {
+                break;
+            }
         }
     }
-    if (aPlayer.isPoor)
+    //function
+    if (aCasino.GetPlayer().GetIsWin() == true)
+    {
+        aCasino.AddPlayerMoney(tableTotal);
+        aCasino.SubTableMoney(tableTotal);
+        std::cout << "You WON: " << tableTotal << " moneys!!" << std::endl;
+    }
+    else
+    {
+        aCasino.SubPlayerMoney(tableTotal);
+        aCasino.AddTableMoney(tableTotal);
+        std::cout << "You LOST: " << tableTotal << " moneys!!" << std::endl;
+    }
+    if (aCasino.GetPlayer().GetIsPoor() == true)
     {
         std::cout << "You are in debt now wow." << std::endl;
     }
-    SayTableMoney(aGameState, aGuess, aOddEven, aHighRoll, aRoulette);
-    SayMoneySum(aPlayer);
+    SayTableMoney(aCasino);
+    SayMoneySum(aCasino);
 }
 
-int UpdateBet(Player::Data& player)
+
+int UpdateBet(Casino& aCasino)
 {
     int betValue;
-    const int minBetValue = 0;
-    const int maxBetValue = player.myMoney;
+    int minBetValue = 0;
+    int maxBetValue = aCasino.GetPlayer().GetMoney();
     bool isBetting = true;
 
     while (isBetting)
     {
         std::cout << "Whats your bet?" << std::endl;
-        int input = Casino::InputInt();
+        int input = aCasino.InputInt();
 
         if (minBetValue < input && input <= maxBetValue)
         {
@@ -552,133 +468,135 @@ int UpdateBet(Player::Data& player)
         }
         else
         {
-            std::cout << "Nope! You can only bet what you have foo! \n You have: " << player.myMoney << ".\n"
+            std::cout << "Nope! You can only bet what you have foo! \n You have: " << aCasino.GetPlayer().GetMoney() <<
+                ".\n"
                 << "and not below one or negative for queens sake!" << std::endl;
         }
-        isBetting = true;
+        isBetting = false;
     }
     return 0;
 }
-void PlayGame(Casino::GameState aGameState, Player::Data& aPlayer, TableRoulette::Data& aRoulette)
-{
-    switch (aGameState)
+
+void PlayGame(Casino& aCasino)
+{   
+    switch (aCasino.GetGameState())
     {
-        case Casino::GameState::Table_Guess:
+    case Casino::GameState::Table_Guess_LowStakes:
+        { TableGuess& tableGuess = aCasino.GetTableGuess();
+            aCasino.PlayTableGuess(aCasino, tableGuess);
+            break;
+        }
+    case Casino::GameState::Table_Guess_HighStakes:
+        {TableGuess& tableGuess = aCasino.GetTableGuess2();
+            aCasino.PlayTableGuess(aCasino, tableGuess);
+            break;
+        }
+    case Casino::GameState::Table_OddEven:
         {
-            TableGuess::PlayTable(aGameState, aPlayer);
-
+            aCasino.PlayTableOddEven(aCasino);
             break;
         }
 
-        case Casino::GameState::Table_OddEven:
+    case Casino::GameState::Table_HighRoll:
         {
-            TableOddEven::PlayTable(aGameState, aPlayer);
+            aCasino.PlayTableHighRoll(aCasino);
+            break;
+        }
+    case Casino::GameState::Table_Roulette:
+        {
+            aCasino.RouletteBet(aCasino);
             break;
         }
 
-        case Casino::GameState::Table_HighRoll:
-        {
-            TableHighRoll::PlayTable(aPlayer);
-            break;
-        }
-        case Casino::GameState::Table_Roulette:
-        {
-            TableRoulette::PlayTable(aPlayer, aRoulette);
-            break;
-        }
-
-        case Casino::GameState::Exit_Main:
-        case Casino::GameState::Winstreak:
-        default:
+    case Casino::GameState::Exit_Main:
+    case Casino::GameState::Winstreak:
+    default:
         {
             break;
         }
-        
     }
 }
-void BeginGameLogic(Casino::GameState& aGameState, Player::Data& aPlayer, TableGuess::Data& aGuess, TableOddEven::Data& aOddEven,
-                    TableHighRoll::Data& aHighRoll, TableRoulette::Data& aRoulette)
+
+void BeginGameLogic(Casino& aCasino)
 {
-    const int bet = UpdateBet(aPlayer);
-    PlayGame(aGameState, aPlayer, aRoulette);
-    UpdateMoneyTable(bet, aGameState, aPlayer.isWin, aPlayer, aGuess, aOddEven, aHighRoll,aRoulette);
-    UpdateWinStreak(aPlayer.isWin, aPlayer);
+    int bet = UpdateBet(aCasino);
+    PlayGame(aCasino);
+    UpdateMoneyTable(bet, aCasino);
+    UpdateWinStreak(aCasino);
 }
-void EnterTable(Casino::GameState aGameState, Player::Data& aPlayer, Casino::Data& aCasino, TableGuess::Data& aGuess,
-                TableOddEven::Data& aOddEven, TableHighRoll::Data& aHighRoll, TableRoulette::Data& aRoulette)
+
+void EnterTableMenu(Casino& aCasino)
 {
     aCasino.IsTableActive = true;
-    while (aCasino.IsTableActive && AmIPoor(aPlayer) == false && IsTablePoor(aGameState, aGuess, aOddEven, aHighRoll, aRoulette) == false)
+    while (aCasino.IsTableActive && AmIPoor(aCasino) == false && IsTablePoor(aCasino) == false)
     {
         SayTableMenu();
-        switch (static_cast<Casino::TableMenu>(Casino::InputInt()))
+     Casino::TableMenu table = static_cast<Casino::TableMenu>(aCasino.InputInt());
+        switch (table)
         {
-            case Casino::TableMenu::Exit_Table:
+        case Casino::TableMenu::Exit_Table:
             {
                 ExitMenu(aCasino);
                 break;
             }
-            case Casino::TableMenu::BeginGame:
+        case Casino::TableMenu::BeginGame:
             {
-                
-                BeginGameLogic(aGameState, aPlayer, aGuess, aOddEven, aHighRoll, aRoulette);
+                BeginGameLogic(aCasino);
                 break;
             }
-            case Casino::TableMenu::Print_Rules:
+        case Casino::TableMenu::Print_Rules:
             {
-                SayRulesTable(aGameState);
+                aCasino.SayRulesTable(aCasino);
                 break;
             }
-            case Casino::TableMenu::Print_Streak:
+        case Casino::TableMenu::Print_Streak:
             {
-                PrintWinStreak(aPlayer);
+                PrintWinStreak(aCasino);
                 break;
             }
-            default:
+        default:
             {
-                Casino::SayInputError();
+                aCasino.SayInputError();
                 break;
             }
         }
     }
 }
-void MainMenu(Casino::GameState aGameState, Player::Data& aPlayer, Casino::Data& aCasino)
+
+void MainMenu(Casino& aCasino)
 {
-    TableGuess::Data guess;
-    TableOddEven::Data oddEven;
-    TableHighRoll::Data highRoll;
-    TableRoulette::Data roulette;
-    switch (aGameState)
+    switch (aCasino.GetGameState())
     {
         case Casino::GameState::Exit_Main:
         {
             ExitMenu(aCasino);
             break;
         }
-        case Casino::GameState::Table_Guess:
-        case Casino::GameState::Table_OddEven:
-        case Casino::GameState::Table_HighRoll:
-        case Casino::GameState::Table_Roulette:
+    case Casino::GameState::Table_Guess_LowStakes:
+    case Casino::GameState::Table_Guess_HighStakes:
+    case Casino::GameState::Table_OddEven:
+    case Casino::GameState::Table_HighRoll:
+    case Casino::GameState::Table_Roulette:
         {
             {
-                if (IsTablePoor(aGameState, guess, oddEven, highRoll, roulette) == false)
+                if (IsTablePoor(aCasino) == false)
                 {
-                    SayGreetingTable(aGameState);
-                    SayTableTreshold(aGameState, guess, oddEven, highRoll, roulette);
-                    SayMoneySum(aPlayer);
+                    SayGreetingTable(aCasino);
+                    SayTableTreshold(aCasino);
+                    SayMoneySum(aCasino);
                 }
             }
-            EnterTable(aGameState, aPlayer, aCasino, guess, oddEven, highRoll, roulette);
+            EnterTableMenu(aCasino);
             break;
         }
-        case Casino::GameState::Winstreak:
+    case Casino::GameState::Winstreak:
         {
-            PrintWinStreak(aPlayer);
+            PrintWinStreak(aCasino);
             break;
         }
-        default:
+    default:
         {
-            Casino::SayInputError();
+            aCasino.SayInputError();
             break;
         }
     }
@@ -686,14 +604,20 @@ void MainMenu(Casino::GameState aGameState, Player::Data& aPlayer, Casino::Data&
 
 int main()
 {
-    Casino::Data casinoData;
-    Player::Data player;
+    Casino casino;
     SayEnterCasino();
-    casinoData.isMainActive = true;
-    while (casinoData.isMainActive && AmIPoor(player) == false)
+    std::cout <<"Players name is Bob" << std::endl;
+    
+    casino.GetPlayer().SetName();
+   casino.GetPlayer().SayName();
+    std::cout << " I just transfer this through aCasino.Player.Getname"<<std::endl;
+    
+    casino.isMainActive = true;
+    while (casino.isMainActive && AmIPoor(casino) == false)
     {
         SayMainMenuChoices();
-        MainMenu(static_cast<Casino::GameState>(Casino::InputInt()), player, casinoData);
+        casino.SetGameState(static_cast<Casino::GameState>(casino.InputInt()));
+        MainMenu(casino);
     }
-    SayByeCasino(player);
+    SayByeCasino(casino);
 };

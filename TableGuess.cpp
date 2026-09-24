@@ -1,50 +1,25 @@
 #include "TableGuess.h"
-#include <iostream>
-#include <ostream>
-#include "Data.h"
-#include "Casino.h"
-#include "Hasardspel.h"
 
-namespace TableGuess
+#include <iostream>
+
+
+void TableGuess::SayGuessTreshHold()
 {
-    void PlayTable(Casino::GameState& aGameState, Player::Data& aPlayer)
+    if (myMoney >= myTreshLoser)
     {
-        Data tableData;
-        int playerGuess = 0;
-        bool isInputActive = true;
-        const int die1 = Casino::RollDie();
-        const int die2 = Casino::RollDie();
-        const int DiceSum = die1 + die2;
-        while (isInputActive)
-        {
-            SayRulesTable(aGameState);
-            playerGuess = Casino::InputInt();
-            if (tableData.inputTableMin <= playerGuess && playerGuess <= tableData.inputTableMax)
-            {
-                isInputActive = false;
-            }
-            //cheat  codes to win, input 69 or 67
-            else if (playerGuess == 69 || playerGuess == 67)
-            {
-                playerGuess = DiceSum;
-                isInputActive = false;
-            }
-            else
-            {
-                isInputActive = true;
-            }
-        }
-        std::cout << "I rolled: " << die1 << " and " << die2 << '\n'
-            << "Sum: " << die1 + die2 << '\n' << std::endl;
-        if (playerGuess != DiceSum)
-        {
-            aPlayer.isWin = false;
-            Casino::SayLose();
-        }
-        else
-        {
-            aPlayer.isWin = true;
-            Casino::SayWin();
-        }
+        std::cout << "Try again, regain your losses!?" << std::endl;
     }
+    else if (myMoney <= myTreshWinning)
+    {
+        std::cout << "We have a big winner here, why quit when the fire is hot amiright?" << std::endl;
+    }
+    else
+    {
+        std::cout << "You should  spend that money here and nowhere else!" << std::endl;
+    }
+}
+
+void TableGuess::SayGuessRules()
+{
+    std::cout << "The table is open! So give me one between " << myBetMin <<" and " << myBetMax << "! Lets gamble!" << std::endl;
 }

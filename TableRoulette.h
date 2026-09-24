@@ -1,48 +1,64 @@
 #pragma once
-#include <iostream>
-
-#include "Casino.h"
-#include "Player.h"
-
-namespace TableRoulette
+class TableRoulette
 {
-    struct Data
+public:
+
+    enum class Bets
     {
-        int myMoney = {1000};
-        int myTreshBig = 2000;
-        int myTreshSmall = 500;
-        int myStraighGayMult = 35;
-        int myRedBlackMult = 3;
-        int myOddEvenMult = 1;
-        int myColumnMult = 2;
-        int mySlotsMax = 36;
-        int mySlotsMin = 0;
-        
-        enum class Color
-        {
-            Green = 0,
-            Black = 1,
-            Red = 2
-        };
-        enum class Bets
-        {
-            Invalid = 0,
-            Straight_Gay = 1,
-            Red_Black = 2,
-            Odd_Even = 3,
-            Column = 4
-        };
-        enum class Column
-        {
-            Columnn_One = 1,
-            Column_Two = 2,
-            Column_Three = 3
-        };
+        Invalid = 0,
+        Straight_Gay = 1,
+        Red_Black = 2,
+        Odd_Even = 3,
+        Column = 4
     };
-    Data::Color CalcRoulleteOddEven();
-    void PlayColumn(Player::Data& data, const int aColumnValue);
-    void PlayColor(Player::Data& aPlayer);
-    void PlayTable(Player::Data& aPlayer, Data& aRoulette);
-    void RouletteBet(Player::Data& aPlayer, const Data& aRoulette);
-    void PlayStraight(Player::Data& aPlayer, Data aRoulette);
+    enum class Color
+    {
+        Green = 0,
+        Red = 1,
+        Black = 2
+    };
+
+    enum class Column
+    {
+        Invalid = 0,
+        Left = 1,
+        Middle = 2,
+        Column_Three = 3
+    };
+
+    Color GetColor()  { return color; }
+    Bets GetBets()  { return bets; }
+    Column GetColumn()  { return column; }
+
+    int GetMoney()  { return myMoney; }
+    int GetTreshLoser()  { return myTreshLoser; }
+    int GetTreshWinner()  { return myTreshWinning; }
+    int GetStraightGayMult()  { return myStraightGayMult; }
+    int GetRedBlackMult()  { return myRedBlackMult; }
+    int GetOddEvenMult()  { return myOddEvenMult; }
+    int GetColumnMult()  { return myColumnMult; }
+    int GetSlotsMax()  { return mySlotsMax; }
+    int GetSlotsMin()  { return mySlotsMin; }
+    
+    
+    void AddMoney(const int aMoney)  {myMoney += aMoney;}
+    void SubMoney(const int aMoney)  {myMoney -= aMoney;}
+    void SetMoney( int aMoney) { myMoney = aMoney; }
+    void SetBets( Bets aBets) { bets = aBets; }
+    void SetColor( Color aColor) { color = aColor; }
+    void SetColumn( Column aColumn) { column = aColumn; }
+private:
+    int myMoney = {100};
+    int myTreshLoser = 200;
+    int myTreshWinning = 50;
+    int myStraightGayMult = 5;
+    int myRedBlackMult = 3;
+    int myOddEvenMult = 1;
+    int myColumnMult = 2;
+    int mySlotsMax = 36;
+    int mySlotsMin = 0;
+    
+    Column column = {};
+    Bets bets = {};
+    Color color = {};
 };

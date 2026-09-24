@@ -1,18 +1,21 @@
 #pragma once
-#include "Casino.h"
-#include "Player.h"
-#include "Data.h"
-namespace TableHighRoll
+
+class TableHighRoll
 {
-    void PlayTable(Player::Data& aPlayer);
-    void SayAskReadyToRoll();
-    
-    struct Data
-    {
+
+public:
+    int GetMoney(){return myMoney;}
+    int GetTreshLoser(){return myTreshLoser;}
+    int GetTreshWinner(){return myTreshWinning;}
+    int GetTableMultiplier(){return myTableMultiplier;}
+    int GetTableBonus(){return myTableBonus;}
+    void AddMoney(const int aMoney)  {myMoney += aMoney;}
+    void SubMoney(const int aMoney)  {myMoney -= aMoney;}
+    void SetMoney(int aMyMoney){myMoney = aMyMoney;}
+private:
         int myMoney = {100};
-        int myTreshBig = 200;
-        int myTreshSmall = 50;
+        int myTreshLoser = 200;
+        int myTreshWinning = 50;
         int myTableMultiplier = 1;
         int myTableBonus = 69;
-    };
-}
+};
