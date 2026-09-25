@@ -46,11 +46,11 @@ public:
     
     void SayInputError();
     int InputInt();
-    void SayAskReadyToRoll();
+    void SayAskReadyToRoll(Casino& aCasino);
     int RollDie();
     int RollRoulette();
-    void SayWin();
-    void SayLose();
+    void SayWin(Casino& aCasino);
+    void SayLose(Casino& aCasino);
     void PlayColumn(Casino& aCasino);
     void PlayRouColorOrOdd(Casino& aCasino,TableRoulette::Color aColor);
     void RouletteBet(Casino& aCasino);

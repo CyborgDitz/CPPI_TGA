@@ -4,8 +4,6 @@
 class TableOddEven
 {
     public:
- 
-    
     int GetMoney()  {return myMoney;}
     int GetTreshLoser()  {return myTreshLoser;}
     int GetTreshWinner()  {return myTreshWinning;}
@@ -14,8 +12,6 @@ class TableOddEven
     void AddMoney(const int aMoney)  {myMoney += aMoney;}
     void SubMoney(const int aMoney)  {myMoney -= aMoney;}
     void SetMoney(int aMyMoney){myMoney = aMyMoney;}
-    
-  
     private: 
         int myMoney = {100};
         int myTreshLoser = 200;

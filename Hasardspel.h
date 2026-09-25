@@ -6,7 +6,7 @@ int SubCalc(int aValue1, int aSubValue);
 void SayByeCasino( Casino& aCasino);
 bool AmIPoor(Casino& aCasino);
 bool IsTablePoor( Casino& aCasino);
-void SayEnterCasino();
+void SayEnterCasino(Casino& aCasino);
 void SayTableOutCashed();
 void SayTableTreshold( Casino& aCasino);
 void SayTableMoney( Casino& aCasino);

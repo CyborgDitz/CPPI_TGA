@@ -4,7 +4,7 @@ class Player
 {
 public:
     
-   const char* getName() { return myName; }
+   const char* GetName() { return myName; }
     int GetMoney() { return myMoney; }
     int GetStreakMax() const { return streakArrayMax; }
     int* GetWinStreak()  { return myWinStreak; }

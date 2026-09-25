@@ -16,12 +16,12 @@ void Casino::PlayTableOddEven(Casino& aCasino)
 {
     {
         bool isInputActive = true;
-        Casino::OddCoin playerGuess = {};
+        OddCoin playerGuess = {};
         while (isInputActive)
         {
             aCasino.SayRulesTable(aCasino);
-            playerGuess = static_cast<Casino::OddCoin>(aCasino.InputInt());
-            if (playerGuess == Casino::OddCoin::Odd || playerGuess == Casino::OddCoin::Even)
+            playerGuess = static_cast<OddCoin>(aCasino.InputInt());
+            if (playerGuess == OddCoin::Odd || playerGuess == OddCoin::Even)
             {
                 isInputActive = false;
             }
@@ -37,12 +37,12 @@ void Casino::PlayTableOddEven(Casino& aCasino)
         if (playerGuess != aCasino.CalcOddEven(aCasino))
         {
             aCasino.GetPlayer().SetIsWin(false);
-            aCasino.SayLose();
+            aCasino.SayLose(aCasino);
         }
         else
         {
             aCasino.GetPlayer().SetIsWin(true);
-            aCasino.SayWin();
+            aCasino.SayWin(aCasino);
         }
     }
 }
@@ -81,12 +81,12 @@ void Casino::PlayTableGuess(Casino& aCasino, TableGuess& aTableGuess)
     if (playerGuess != DiceSum)
     {
         aCasino.GetPlayer().SetIsWin(false);
-        aCasino.SayLose();
+        aCasino.SayLose(aCasino);
     }
     else
     {
         aCasino.GetPlayer().SetIsWin(true);
-        aCasino.SayWin();
+        aCasino.SayWin(aCasino);
     }
 }
 
@@ -94,7 +94,7 @@ void Casino::PlayTableHighRoll(Casino& aCasino)
 {
         int differenceValue;
 
-        aCasino.SayAskReadyToRoll();
+        aCasino.SayAskReadyToRoll(aCasino);
         system("pause");
          int playerDie1 = aCasino.RollDie();
          int playerDie2 = aCasino.RollDie();
@@ -114,8 +114,9 @@ void Casino::PlayTableHighRoll(Casino& aCasino)
             aCasino.GetPlayer().SetIsWin(false);
             differenceValue = diceSum - playerDiceSum;
             std::cout << "It differs by: " << differenceValue << std::endl;
-            std::cout << "Yours is not bigger than mine!!" << std::endl;
-            aCasino.SayLose();
+            aCasino.GetPlayer().SayName();
+            std::cout << "'s is not bigger than mine!!" << std::endl;
+            aCasino.SayLose(aCasino);
         }
         else if (playerDiceSum > diceSum)
         {
@@ -123,7 +124,7 @@ void Casino::PlayTableHighRoll(Casino& aCasino)
             differenceValue = playerDiceSum - diceSum;
             std::cout << "It differs by: " << differenceValue << std::endl;
             std::cout << "Yours is bigger than mine!" << std::endl;
-            aCasino.SayWin();
+            aCasino.SayWin(aCasino);
         }
 }
 
@@ -178,12 +179,12 @@ void Casino::PlayStraight(Casino& aCasino)
     if (playerGuess != DiceSum)
     {
         aCasino.GetPlayer().SetIsWin(false);
-        aCasino.SayLose();
+        aCasino.SayLose(aCasino);
     }
     else
     {
         aCasino.GetPlayer().SetIsWin(true);
-        aCasino.SayWin();
+        aCasino.SayWin(aCasino);
     }
 }
 
@@ -207,20 +208,20 @@ void Casino::PlayColumn(Casino& aCasino)
 
     if (aColumnValue != randomColumn)
     {
-        aCasino.SayLose();
+        aCasino.SayLose(aCasino);
         aCasino.GetPlayer().SetIsWin(false);
     }
     else
     {
         aCasino.GetPlayer().SetIsWin(true);
-        aCasino.SayWin();
+        aCasino.SayWin(aCasino);
     }
 }
 
 void Casino::RouletteBet(Casino& aCasino)
 {
     bool isBetting = true;
-    std::cout << "Pick what you want to bet on!\n 1. Straight\t2. Red/Black\n 3. Odd/Even\t4. Column bet!!" <<
+    std::cout << "Pick what you want to bet on, "; aCasino.GetPlayer().SayName(); std::cout <<"?\n 1. Straight\t2. Red/Black\n 3. Odd/Even\t4. Column bet!!" <<
         std::endl;
     while (isBetting)
     { 
@@ -230,12 +231,12 @@ void Casino::RouletteBet(Casino& aCasino)
         {
         case TableRoulette::Bets::Invalid:
             {
-                std::cout << "Nope, you have to bet" << std::endl;
+                std::cout << "Nope, you have to bet"; aCasino.GetPlayer().SayName(); std::cout << std::endl;
                 break;
             }
         case TableRoulette::Bets::Straight_Gay:
             {
-                std::cout << "What are you betting on of 0-36?" << std::endl;
+                std::cout << "What are you betting on of 0-36"; aCasino.GetPlayer().SayName(); std::cout << "?" << std::endl;
                 PlayStraight(aCasino);
                 isBetting = false;
 
@@ -244,18 +245,18 @@ void Casino::RouletteBet(Casino& aCasino)
 
         case TableRoulette::Bets::Red_Black:
             {
-                std::cout << "Are you betting 1. Red or  2. Black" << std::endl;
+                std::cout << "Are you betting 1. Red or  2. Black"; aCasino.GetPlayer().SayName(); std::cout << "?" << std::endl;
                 TableRoulette::Color color = static_cast<TableRoulette::Color>(aCasino.InputInt());
                 switch (color)
                 {
                 case TableRoulette::Color::Red:
                     {
-                        std::cout << "You picked red!" << std::endl;
+                        std::cout << "You picked red"; aCasino.GetPlayer().SayName(); std::cout << "!" << std::endl;
                         break;
                     }
                 case TableRoulette::Color::Black:
                     {
-                        std::cout << "You picked red!" << std::endl;
+                        std::cout << "You picked red"; aCasino.GetPlayer().SayName(); std::cout << "!" << std::endl;
                         break;
                     }
                 case TableRoulette::Color::Green:
@@ -271,7 +272,7 @@ void Casino::RouletteBet(Casino& aCasino)
             }
         case TableRoulette::Bets::Odd_Even:
             {
-                std::cout << "Are you betting 1. Odd or  2. Even?" << std::endl;
+                std::cout << "Are you betting 1. Odd or  2. Even"; aCasino.GetPlayer().SayName(); std::cout << "?" << std::endl;
                TableRoulette::Color colorAndNumber = static_cast<TableRoulette::Color>(aCasino.InputInt());
                 switch (colorAndNumber)
                 {
@@ -316,12 +317,12 @@ void Casino::PlayRouColorOrOdd(Casino& aCasino, TableRoulette::Color aColor)
         if (aColor != aCasino.GetTableRoulette().GetColor())
         {
             aCasino.GetPlayer().SetIsWin(false);
-            aCasino.SayLose();
+            aCasino.SayLose(aCasino);
         }
         else
         {
             aCasino.GetPlayer().SetIsWin(true);
-            aCasino.SayWin();
+            aCasino.SayWin(aCasino);
         }
     
 }
@@ -375,7 +376,7 @@ void Casino::SayRulesTable(Casino& aCasino)
         }
     case GameState::Table_HighRoll:
         {
-            std::cout << "Just roll higher than me!" << std::endl;
+            std::cout << "Just roll higher than me!"; aCasino.GetPlayer().SayName(); std::cout << "!" << std::endl;
             break;
         }
     case GameState::Table_Roulette:
@@ -400,9 +401,9 @@ void Casino::SayRulesTable(Casino& aCasino)
     }
 }
 
-void Casino::SayAskReadyToRoll()
+void Casino::SayAskReadyToRoll(Casino& aCasino)
 {
-    std::cout << "Are you ready to start? Press any button to begin" << std::endl;
+    std::cout << "Are you ready to start? Press any button to begin"; aCasino.GetPlayer().SayName(); std::cout << "!" << std::endl;
 }
 
 TableRoulette::Color CalcRouletteColorAndOdd(Casino& aCasino)
@@ -498,12 +499,14 @@ int Casino::RollRoulette()
     return randomNumber;
 };
 
-void Casino::SayWin()
+void Casino::SayWin(Casino& aCasino)
 {
-    std::cout << "You win!" << std::endl;
+     aCasino.GetPlayer().SayName(); std::cout<< ", you win!" << std::endl;
 }
 
-void Casino::SayLose()
+void Casino::SayLose(Casino& aCasino)
 {
-    std::cout << "Thats your loss, you unlucky fool! \n" << std::endl;
+    std::cout << "Thats your loss "; 
+    aCasino.GetPlayer().SayName();
+    std::cout << " you unlucky fool! \n" << std::endl;
 }

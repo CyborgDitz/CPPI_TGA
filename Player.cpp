@@ -8,7 +8,7 @@ void Player::SetName()
     
     while (true)
     {
-        std::cout << " name must at least 2 characters long and only containg letters" << std::endl;
+        std::cout << "Name must at least 2 characters long and only contain letters" << std::endl;
         std::cin.get(myName, 16);
         if (std::cin.fail())
         {  std::cin.clear();
@@ -50,5 +50,4 @@ void Player::SayName()
         }
         std::cout << myName[i];
     }
-    std::cout << std::endl;
 }

@@ -7,10 +7,14 @@
 #include "TableHighRoll.h"
 #include "TableRoulette.h"
 
-void SayEnterCasino()
+void SayEnterCasino(Casino& aCasino)
 {
     std::cout << "Welcome to the Casino, friend! \n" << std::endl;
-    std::cout << "What would you like to do? \n" << std::endl;
+    std::cout <<"Whats your name?" << std::endl;
+    aCasino.GetPlayer().SetName();
+    aCasino.GetPlayer().SayName();
+    std::cout << " I just transfered this through the casino!" << std::endl;
+    std::cout << "What would you like to do, ";  aCasino.GetPlayer().SayName();
 }
 
 void SayTableMenu()
@@ -47,7 +51,8 @@ void SayTableTreshold(Casino& aCasino)
         {
             if (aCasino.GetTableOddEven().GetMoney() >= aCasino.GetTableOddEven().GetTreshLoser())
             {
-                std::cout << "Try again, regain your losses!?" << std::endl;
+                std::cout << "Try again, regain ";
+                aCasino.GetPlayer().SayName(); std::cout << "your losses!?" << std::endl;
             }
             else if (aCasino.GetTableOddEven().GetMoney() <= aCasino.GetTableOddEven().GetTreshWinner())
             {
@@ -244,7 +249,9 @@ bool AmIPoor(Casino& aCasino)
 {
     if (aCasino.GetPlayer().GetMoney() <= 0 && aCasino.GetPlayer().GetIsPoor() == false)
     {
-        std::cout << "Get out of our casino you dud!" << std::endl;
+        std::cout << "Get out of our casino ";  
+        aCasino.GetPlayer().SayName(); 
+        std::cout << "'s you dud!" << std::endl;
         aCasino.GetPlayer().SetIsPoor(true);
         return true;
     }
@@ -452,23 +459,25 @@ int UpdateBet(Casino& aCasino)
 
     while (isBetting)
     {
-        std::cout << "Whats your bet?" << std::endl;
+        std::cout << "Whats your bet,"; 
+        aCasino.GetPlayer().SayName();
+    std::cout << " ?" << std::endl;
         int input = aCasino.InputInt();
 
         if (minBetValue < input && input <= maxBetValue)
         {
             betValue = input;
-            std::cout << "You bet: " << betValue << std::endl;
+            aCasino.GetPlayer().SayName(); std::cout << " bet: " << betValue << std::endl;
 
             if (input == maxBetValue)
             {
-                std::cout << "Holy Shcmoly! Thats all your myMoney! " << betValue << std::endl;
+                std::cout << "Holy Shcmoly! Thats all your myMoney "; aCasino.GetPlayer().SayName(); std::cout << "!" << std::endl;
             }
             return betValue;
         }
         else
         {
-            std::cout << "Nope! You can only bet what you have foo! \n You have: " << aCasino.GetPlayer().GetMoney() <<
+            std::cout << "Nope! You can only bet what you have foo! \n"; aCasino.GetPlayer().SayName(); std::cout << " have: " << aCasino.GetPlayer().GetMoney() <<
                 ".\n"
                 << "and not below one or negative for queens sake!" << std::endl;
         }
@@ -605,12 +614,8 @@ void MainMenu(Casino& aCasino)
 int main()
 {
     Casino casino;
-    SayEnterCasino();
-    std::cout <<"Players name is Bob" << std::endl;
-    
-    casino.GetPlayer().SetName();
-   casino.GetPlayer().SayName();
-    std::cout << " I just transfer this through aCasino.Player.Getname"<<std::endl;
+    SayEnterCasino(casino);
+   
     
     casino.isMainActive = true;
     while (casino.isMainActive && AmIPoor(casino) == false)
